@@ -61,12 +61,22 @@ class AWSCli:
                         log.warning(f'  {line[1:]}')
                 if line[0] == '1':
                     ltrace = line[1:]
-                    m = re.match(r"^\[lemniscat\.pushvar(?P<secret>\.secret)?\] (?P<key>[^=]+)=(?P<value>.*)", str(ltrace))
+                    m = re.match(r"^\[lemniscat\.pushvar(?P<secret>\.secret)?\(?(?P<outputType>string|json|int|float|bool)?\)?\] (?P<key>[^=]+)=(?P<value>.*)", str(ltrace))
                     if(not m is None):
+                        value = m.group('value').strip()
+                        if(m.group('outputType') == 'json'):
+                            value = json.loads(value)
+                        elif(m.group('outputType') == 'int'):
+                            value = int(value)
+                        elif(m.group('outputType') == 'bool'):
+                            value = value.lower() == 'true'
+                        elif(m.group('outputType') == 'float'):
+                            value = float(value)
+
                         if(m.group('secret') == '.secret'):
-                            outputVar[m.group('key').strip()] = VariableValue(m.group('value').strip(), True)
+                            outputVar[m.group('key').strip()] = VariableValue(value, True)
                         else:
-                            outputVar[m.group('key').strip()] = VariableValue(m.group('value').strip())
+                            outputVar[m.group('key').strip()] = VariableValue(value)
                     else:
                         log.info(f'  {ltrace}')
 

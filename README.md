@@ -110,6 +110,7 @@ You must use the following format to push variables to the lemniscat runtime:
 `[lemniscat.pushvar] <variableName>=<variableValue>`
 
 For example:
+
 ```powershell
 Write-Host "[lemniscat.pushvar] workspaceExist=$workspaceExist"
 ```
@@ -118,6 +119,18 @@ You can specify the sensitivity of the variable by adding `secret` like this :
 `[lemniscat.pushvar.secret] <variableName>=<variableValue>`
 
 For example:
+
 ```powershell
 Write-Host "[lemniscat.pushvar.secret] storageAccountKey=$storageAccountKey"
+```
+
+By default all variable are considered as string. If you want to specify the type of the variable, you can add the type after the variable name like this:
+`[lemniscat.pushvar(<variableType>)] <variableName>=<variableValue>`
+
+`variableType` can be `string`, `int`, `bool`, `float`, `json` (for complexe object)
+
+For example:
+
+```powershell
+Write-Host "[lemniscat.pushvar(int)] numberOfFiles=$numberOfFiles"
 ```
